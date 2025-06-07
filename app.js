@@ -1,27 +1,29 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(express.json()); // To parse JSON requests
+// Allow cross-origin requests (important for Flutter)
+app.use(cors());
 
-// Example routes
+// Dummy list of doctors
+const doctors = [
+  { id: 1, name: 'Dr. Ahmad', rating: 4.8 },
+  { id: 2, name: 'Dr. Lina', rating: 4.5 },
+  { id: 3, name: 'Dr. Youssef', rating: 4.7 },
+];
+
+// Root route (for testing)
 app.get('/', (req, res) => {
   res.send('Doctor Ranking API is running!');
 });
 
+// Doctors route (your Flutter app calls this)
 app.get('/doctors', (req, res) => {
-  res.json([
-    { id: 1, name: 'Dr. Ahmad', rating: 4.8 },
-    { id: 2, name: 'Dr. Lina', rating: 4.5 }
-  ]);
+  res.json(doctors);
 });
 
-app.post('/review', (req, res) => {
-  const { doctorId, review, rating } = req.body;
-  console.log('New review:', doctorId, review, rating);
-  res.json({ message: 'Review received' });
-});
-
-const PORT = process.env.PORT || 3000;
+// Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
